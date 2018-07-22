@@ -127,19 +127,19 @@ class SwipeableView extends Component {
     this._swipeoutRef = null;
   }
 
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponderCapture: this._handleMoveShouldSetPanResponderCapture.bind(this),
-      onPanResponderGrant: this._handlePanResponderGrant.bind(this),
-      onPanResponderMove: this._handlePanResponderMove.bind(this),
-      onPanResponderRelease: this._handlePanResponderEnd.bind(this),
-      onPanResponderTerminationRequest: this._onPanResponderTerminationRequest.bind(this),
-      onPanResponderTerminate: this._handlePanResponderEnd.bind(this),
-      onShouldBlockNativeResponder: () => false,
-    });
-  }
-
   componentDidMount() {
+
+      setTimeout(this._measureSwipeout.bind(this));
+
+      this._panResponder = PanResponder.create({
+          onMoveShouldSetPanResponderCapture: this._handleMoveShouldSetPanResponderCapture.bind(this),
+          onPanResponderGrant: this._handlePanResponderGrant.bind(this),
+          onPanResponderMove: this._handlePanResponderMove.bind(this),
+          onPanResponderRelease: this._handlePanResponderEnd.bind(this),
+          onPanResponderTerminationRequest: this._onPanResponderTerminationRequest.bind(this),
+          onPanResponderTerminate: this._handlePanResponderEnd.bind(this),
+          onShouldBlockNativeResponder: () => false,
+      });
     const { shouldBounceOnMount } = this.props;
 
     if (shouldBounceOnMount) {
@@ -152,7 +152,6 @@ class SwipeableView extends Component {
       }, ON_MOUNT_BOUNCE_DELAY);
     }
 
-    setTimeout(this._measureSwipeout.bind(this));
   }
 
   componentWillUnmount() {
@@ -161,7 +160,7 @@ class SwipeableView extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+    static getDerivedStateFromProps(nextProps) {
     const { isOpen } = this.props;
     /**
      * We do not need an "animateOpen(noCallback)" because this animation is
